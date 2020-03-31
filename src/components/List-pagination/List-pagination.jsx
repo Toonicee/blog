@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Pagination } from 'antd';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import { setPage, articleLoaded } from '../../redux/actions/article';
 
@@ -25,11 +26,16 @@ const ListPagination = ({ onSetPage, getAllArticles, articlesCount }) => {
   };
 
   return (
-    <nav>
+    <Nav>
       <Pagination onChange={value => setPage(value)} total={articlesCount} />
-    </nav>
+    </Nav>
   );
 };
+
+const Nav = styled.nav`
+  display: flex;
+  justify-content: center;
+`;
 
 ListPagination.defaultProps = {
   articlesCount: 0,
