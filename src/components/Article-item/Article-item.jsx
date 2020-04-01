@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-const ArticleItem = ({ article }) => {
+const ArticleItem = ({ article, getProfileName }) => {
   const renderTagLIst = (
     <div>
       <ul className="article__tag-list">
@@ -12,12 +13,14 @@ const ArticleItem = ({ article }) => {
       </ul>
     </div>
   );
-
+  const getProfile = () => {
+    getProfileName(article.author.username);
+  };
   return (
     <WrapperArticle>
       <ArticleHeader>
         <div>
-          <a href="#">
+          <Link onClick={getProfile} to={`/${article.author.username}`}>
             <div>
               <img
                 className="article__image"
@@ -25,19 +28,23 @@ const ArticleItem = ({ article }) => {
                 alt={article.author.username}
               />
             </div>
-          </a>
+          </Link>
         </div>
         <div className="article__meta">
-          <a href="#">{article.author.username}</a>
+          <Link onClick={getProfile} to={`/${article.author.username}`}>
+            {article.author.username}
+          </Link>
           <span>{new Date(article.createdAt).toDateString()}</span>
         </div>
       </ArticleHeader>
       <ArticleBody>
-        <div>
-          <h3 className="article__title">{article.title}</h3>
-          <span>{article.favoritesCount}</span>
-        </div>
-        {article.tagList.length === 0 ? null : renderTagLIst}
+        <Link to={`/articles/${article.slug}`}>
+          <div>
+            <h3 className="article__title">{article.title}</h3>
+            <span>{article.favoritesCount}</span>
+          </div>
+          {article.tagList.length === 0 ? null : renderTagLIst}
+        </Link>
       </ArticleBody>
     </WrapperArticle>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Header, Article } from '../../modules';
+import { Header, ArticleAll } from '../../modules';
 
 const mapStateToProps = state => ({
   isAutoUser: state.auth.isAutoUser,
@@ -14,7 +14,7 @@ const Home = ({ isAutoUser, isProgres }) => {
   return (
     <>
       <Header />
-      {isProgres ? <Article /> : <div>Загрузка</div>}
+      {isProgres ? <ArticleAll /> : <div>Загрузка</div>}
     </>
   );
 };

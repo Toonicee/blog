@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Home, Auth, CreatePost } from '../../pages';
+import { Home, Auth, CreatePost, Profile, Article } from '../../pages';
 import servisec from '../../servisec/servisec';
 import { setUserData } from '../../redux/actions/auth';
 import { articleLoaded } from '../../redux/actions/article';
@@ -42,6 +42,8 @@ class App extends React.Component {
           <Route exact path={['/', '/home']} component={Home} />
           <Route path={['/login', '/signup']} component={Auth} />
           <Route path="/add" component={CreatePost} />
+          <Route exact path="/:username" component={Profile} />
+          <Route exact path="/articles/:slug" component={Article} />
         </Switch>
       </>
     );

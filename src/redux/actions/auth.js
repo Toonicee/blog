@@ -62,22 +62,15 @@ const loginUser = values => dispatch => {
     });
 };
 
-const newUserRegistration = values => dispatch => {
+const newUserRegistration = values => dispatch =>
   servisec.Auth.register({
     user: {
       username: values.username,
       email: values.email,
       password: values.password,
     },
-  })
-    .then(res => {
-      const userData = res.data.user;
-      dispatch(registration({ user: userData }));
-    })
-    .catch(error => {
-      const { errors } = error.response.data;
-      dispatch(setUserDataFailure(errors));
-    });
-};
-
+  }).then(res => {
+    const userData = res.data.user;
+    dispatch(registration({ user: userData }));
+  });
 export { newUserRegistration, loginUser, logout, setUserData };

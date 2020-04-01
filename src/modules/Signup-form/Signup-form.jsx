@@ -40,12 +40,13 @@ const mapDispatchToProps = {
   newUserRegistration,
 };
 
-const SignupForm = ({ newUserRegistration, error }) => {
-  const onSubmit = (values, { setSubmitting, resetForm, setErrors }) => {
-    newUserRegistration(values);
-    resetForm();
+const SignupForm = ({ newUserRegistration }) => {
+  const onSubmit = (values, { setSubmitting, setErrors }) => {
+    newUserRegistration(values).catch(error => {
+      const { errors } = error.response.data;
+      setErrors(errors);
+    });
     setSubmitting(false);
-    setTimeout(4, () => setErrors(error));
   };
 
   return (

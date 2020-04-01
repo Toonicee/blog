@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { articleLoaded, downloadProgress } from '../../redux/actions/article';
+import { profileName } from '../../redux/actions/profile';
 import { ArticleItem, ListPagination, Container } from '../../components';
 
 const mapStateToProps = state => {
@@ -13,16 +13,15 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  articleLoaded,
-  downloadProgress,
+  profileName,
 };
 
-const Article = ({ articles }) => {
+const ArticleAll = ({ articles, profileName }) => {
   return (
     <div>
       <Container>
         {articles.map(article => {
-          return <ArticleItem article={article} key={article.slug} />;
+          return <ArticleItem article={article} getProfileName={profileName} key={article.slug} />;
         })}
         <WrapperPagination>
           <ListPagination />
@@ -36,4 +35,4 @@ const WrapperPagination = styled.div`
   margin: 50px 0;
 `;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Article);
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleAll);
