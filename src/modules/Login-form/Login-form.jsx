@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, SubmitButton } from 'formik-antd';
+import { Form, SubmitButton, Input } from 'formik-antd';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
+import { Icon } from 'antd';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 
-import { Block, InputTypePassword, InputTypeText } from '../../components';
-import { loginUser } from '../../redux/actions/auth';
+import { Block } from '../../components';
+import { loginUser } from '../../redux/actions/auth/async-auth';
 
 const validation = Yup.object().shape({
   password: Yup.string()
@@ -24,18 +25,17 @@ const validation = Yup.object().shape({
     .required('Введите ваш E-mail'),
 });
 
-const mapStateToProps = state => ({
-  currentUser: state.currentUser,
+const mapStateToProps = ({ auth }) => ({
+  email: auth.currentUser.email,
 });
 
 const mapDispatchToProps = {
-  onLogin: loginUser,
+  loginUser,
 };
 
-const LoginForm = props => {
-  console.log(props);
+const LoginForm = ({ loginUser, email }) => {
   const onSubmit = (values, { setSubmitting, setErrors }) => {
-    props.onLogin(values, setSubmitting, setErrors);
+    loginUser(values, setSubmitting, setErrors);
   };
   return (
     <>
@@ -47,20 +47,29 @@ const LoginForm = props => {
         <Formik
           initialValues={{
             password: '',
-            email: '',
+            email: `${email || ''}`,
           }}
           validationSchema={validation}
           onSubmit={onSubmit}
         >
           <Form>
-            <InputTypeText
-              type="email"
-              name="email"
-              placeholder="E-mail"
-              icon="mail"
-              size="large"
-            />
-            <InputTypePassword name="password" placeholder="Пароль" size="large" />
+            <Form.Item name="email">
+              <Input
+                prefix={<Icon type="user" />}
+                size="large"
+                type="email"
+                name="email"
+                placeholder="E-mail"
+              />
+            </Form.Item>
+            <Form.Item name="password">
+              <Input.Password
+                prefix={<Icon type="lock" />}
+                size="large"
+                name="password"
+                placeholder="Пароль"
+              />
+            </Form.Item>
             <div>
               <SubmitButton size="large" block>
                 Войти в аккаунт
@@ -77,7 +86,7 @@ const LoginForm = props => {
 };
 
 LoginForm.propTypes = {
-  onLogin: PropTypes.func.isRequired,
+  loginUser: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

@@ -1,36 +1,87 @@
 import React from 'react';
-import { Form, SubmitButton } from 'formik-antd';
+import { Form, Input, SubmitButton } from 'formik-antd';
 import { Formik } from 'formik';
+import PropTypes from 'prop-types';
+import { Redirect, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import { InputTypeText, InputTypeTextArea } from '../../components';
+import { articleCreate, editArticle, resetState } from '../../redux/actions';
 
-const mapStateToProps = state => ({ state });
+const mapStateToProps = ({ article: { articleCurrent, articleState } }) => ({
+  articleCurrent: {
+    title: articleCurrent.title,
+    description: articleCurrent.description,
+    body: articleCurrent.body,
+    tagList: articleCurrent.tagList,
+    slug: articleCurrent.slug,
+  },
+  articleState,
+});
 
-const PostForm = props => {
-  console.log(props);
+const mapDispatchToProps = {
+  articleCreateConnect: articleCreate,
+  editArticleConnect: editArticle,
+  resetStateConnect: resetState,
+};
+
+const PostForm = ({
+  articleCreateConnect,
+  editArticleConnect,
+  articleCurrent,
+  articleState,
+  resetStateConnect,
+}) => {
+  const { pathname } = useLocation();
+  const onSubmit = (values, { setSubmitting, setErrors }) => {
+    if (pathname === '/add') {
+      articleCreateConnect(
+        values,
+        error => setErrors(error),
+        () => setSubmitting(false)
+      );
+    } else {
+      editArticleConnect(articleCurrent.slug, values);
+    }
+  };
+
+  const setInitialValues = currentPathname => {
+    if (currentPathname === '/add') {
+      return {
+        title: '',
+        description: '',
+        body: '',
+        tagList: '',
+      };
+    }
+    return {
+      title: articleCurrent.title,
+      description: articleCurrent.description,
+      body: articleCurrent.body,
+      tagList: articleCurrent.tagList,
+    };
+  };
+  if (articleState === 'created' || articleState === 'edited') {
+    localStorage.setItem('articleSlug', articleCurrent.slug);
+    resetStateConnect();
+    return <Redirect to={`/articles/${articleCurrent.slug}`} />;
+  }
   return (
     <WrapperForm>
-      <Formik
-        initialValues={{
-          title: '',
-          description: '',
-          content: '',
-          tags: '',
-        }}
-        onSubmit={() => console.log('OK')}
-      >
+      <Formik initialValues={setInitialValues(pathname)} onSubmit={onSubmit}>
         <Form>
-          <InputTypeText type="text" name="title" placeholder="title" validating={false} />
-          <InputTypeText
-            type="text"
-            name="description"
-            placeholder="description"
-            validating={false}
-          />
-          <InputTypeTextArea name="content" placeholder="content" />
-          <InputTypeText type="text" name="tags" placeholder="tags" validating={false} />
+          <Form.Item name="title">
+            <Input name="title" placeholder="Заголовок поста" />
+          </Form.Item>
+          <Form.Item name="description">
+            <Input name="description" placeholder="о чем этот пост?" />
+          </Form.Item>
+          <Form.Item name="body">
+            <Input.TextArea rows={5} name="body" placeholder="напишите свой пост" />
+          </Form.Item>
+          <Form.Item name="tagList">
+            <Input name="tagList" placeholder="введите теги" />
+          </Form.Item>
           <WrapperButton>
             <SubmitButton size="large">Опубликовать</SubmitButton>
           </WrapperButton>
@@ -38,6 +89,18 @@ const PostForm = props => {
       </Formik>
     </WrapperForm>
   );
+};
+
+PostForm.defaultProps = {
+  articleState: '',
+};
+
+PostForm.propTypes = {
+  articleCreateConnect: PropTypes.func.isRequired,
+  editArticleConnect: PropTypes.func.isRequired,
+  articleState: PropTypes.string,
+  resetStateConnect: PropTypes.func.isRequired,
+  articleCurrent: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 const WrapperForm = styled.div`
@@ -51,4 +114,4 @@ const WrapperButton = styled.div`
   justify-content: flex-end;
 `;
 
-export default connect(mapStateToProps)(PostForm);
+export default connect(mapStateToProps, mapDispatchToProps)(PostForm);

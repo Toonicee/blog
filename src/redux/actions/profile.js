@@ -1,23 +1,29 @@
-import servisec from '../../servisec/servisec';
+import { createAction } from 'redux-actions';
+import blogApi from '../../services/services';
 
-const profileLoading = profile => ({
-  type: 'PROFILE_LOADING',
-  payload: profile,
+// registration actions
+export const fetchRegisterRequest = createAction('FETCH_REGISTER_REQUEST');
+
+const fetchProfileRequest = () => ({
+  type: 'FETCH_PROFILE_REQUEST',
 });
 
-const profileName = name => ({
-  type: 'PROFILE_NAME',
-  payload: name,
+const fetchProfileSuccess = profile => ({
+  type: 'FETCH_PROFILE_SUCCESS',
+  payload: profile,
 });
 
 const resetProfile = () => ({
   type: 'RESET_PROFILE',
 });
+
 const getProfile = name => dispatch => {
-  servisec.Profile.get(name).then(res => {
+  localStorage.setItem('ProfileName', name);
+  dispatch(fetchProfileRequest());
+  blogApi.Profile.get(name).then(res => {
     const profile = res.data;
-    dispatch(profileLoading(profile));
+    dispatch(fetchProfileSuccess(profile));
   });
 };
 
-export { getProfile, profileName, resetProfile };
+export { getProfile, resetProfile };

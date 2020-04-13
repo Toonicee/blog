@@ -1,13 +1,75 @@
 import React from 'react';
-import { Header } from '../../modules';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Article = () => {
-  return (
-    <>
-      <Header />
-      <h1>ARTICLE </h1>
-    </>
-  );
+import { Header, ArticlePreview, CommentList } from '../../modules';
+import { Container } from '../../components';
+import { getArticle, getAllComments, resetState } from '../../redux/actions';
+
+const mapStateToProps = ({ article, auth }) => ({
+  article: article.articleCurrent,
+  isProgress: article.isProgress,
+  username: auth.currentUser.username,
+  articleState: article.articleState,
+});
+
+const mapDispatchToProps = {
+  getArticleConnect: getArticle,
+  getAllCommentsConnect: getAllComments,
+  resetStateConnect: resetState,
 };
 
-export default Article;
+class Article extends React.Component {
+  componentDidMount() {
+    const { getArticleConnect, getAllCommentsConnect } = this.props;
+    const articleSlug = localStorage.getItem('articleSlug');
+    getArticleConnect(articleSlug);
+    getAllCommentsConnect(articleSlug);
+  }
+
+  render() {
+    const { article, isProgress, username, articleState, resetStateConnect } = this.props;
+    if (articleState === 'deleted') {
+      resetStateConnect();
+      return <Redirect to="/" />;
+    }
+    return (
+      <>
+        <Header />
+        <Container>
+          <Main>
+            <ArticlePreview username={username} article={article} isProgress={isProgress} />
+            <CommentList />
+          </Main>
+        </Container>
+      </>
+    );
+  }
+}
+
+Article.defaultProps = {
+  isProgress: false,
+  username: '',
+  articleState: '',
+};
+
+Article.propTypes = {
+  getArticleConnect: PropTypes.func.isRequired,
+  resetStateConnect: PropTypes.func.isRequired,
+  getAllCommentsConnect: PropTypes.func.isRequired,
+  articleState: PropTypes.string,
+  article: PropTypes.instanceOf(Object).isRequired,
+  isProgress: PropTypes.bool,
+  username: PropTypes.string,
+};
+
+const Main = styled.div`
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Article);

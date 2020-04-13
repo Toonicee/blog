@@ -1,54 +1,49 @@
 import React from 'react';
-import { Form, SubmitButton } from 'formik-antd';
+import { Form, SubmitButton, Input } from 'formik-antd';
+import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 
 import { connect } from 'react-redux';
 
-import { Block, InputTypePassword, InputTypeText } from '../../components';
-import { newUserRegistration } from '../../redux/actions/auth';
+import { Block, ResultRegistration } from '../../components';
+import { resetFormState, registration } from '../../redux/actions';
 
-const validata = Yup.object().shape({
-  username: Yup.string()
-    .max(50, 'Имя должно содержать не более 50 символов')
-    .required('Введите ваше имя'),
-  password: Yup.string()
-    .min(8, 'Должно быть 8 символов или более')
-    .max(40, 'Должно быть не более 40 символов')
-    .test(
-      'pass',
-      'Только латинские буквы и цифры, хотя бы одна цифра и одна заглавная буква',
-      value => /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/.test(value)
-    )
-    .required('Введите пароль'),
+const validation = Yup.object().shape({
+  username: Yup.string().required('Введите ваше имя'),
+  password: Yup.string().required('Введите пароль'),
   repeatPassword: Yup.string()
     .test('passwords-match', 'Пароли не совподают', function(value) {
       return this.parent.password === value;
     })
     .required('Required'),
-  email: Yup.string()
-    .email('Введите коректные E-mail')
-    .required('Введите ваш E-mail'),
+  email: Yup.string().required('Введите ваш E-mail'),
 });
 
 const mapStateToProps = ({ auth }) => ({
-  error: auth.error,
+  isRegistered: auth.isRegistered,
 });
 
 const mapDispatchToProps = {
-  newUserRegistration,
+  registrationConnect: registration,
+  resetFormStateConnect: resetFormState,
 };
 
-const SignupForm = ({ newUserRegistration }) => {
-  const onSubmit = (values, { setSubmitting, setErrors }) => {
-    newUserRegistration(values).catch(error => {
-      const { errors } = error.response.data;
-      setErrors(errors);
-    });
-    setSubmitting(false);
+const SignupForm = ({ registrationConnect, isRegistered, resetFormStateConnect }) => {
+  const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+    registrationConnect(
+      values,
+      err => setErrors(err),
+      () => setSubmitting(false)
+    );
+    if (isRegistered) resetForm();
   };
 
+  if (isRegistered) {
+    return <ResultRegistration success={isRegistered} resetFormState={resetFormStateConnect} />;
+  }
   return (
     <>
       <div>
@@ -63,14 +58,43 @@ const SignupForm = ({ newUserRegistration }) => {
             repeatPassword: '',
             email: '',
           }}
-          validationSchema={validata}
+          validationSchema={validation}
           onSubmit={onSubmit}
         >
           <Form>
-            <InputTypeText type="mail" name="email" placeholder="E-Mail" icon="mail" size="large" />
-            <InputTypeText name="username" placeholder="Ваше имя" icon="user" size="large" />
-            <InputTypePassword name="password" placeholder="Пароль" />
-            <InputTypePassword name="repeatPassword" placeholder="Повторите пароль" size="large" />
+            <Form.Item name="email">
+              <Input
+                prefix={<Icon type="mail" />}
+                size="large"
+                type="email"
+                name="email"
+                placeholder="E-mail"
+              />
+            </Form.Item>
+            <Form.Item name="username">
+              <Input
+                prefix={<Icon type="user" />}
+                size="large"
+                name="username"
+                placeholder="Ваше имя"
+              />
+            </Form.Item>
+            <Form.Item name="password">
+              <Input.Password
+                prefix={<Icon type="lock" />}
+                size="large"
+                name="password"
+                placeholder="Пароль"
+              />
+            </Form.Item>
+            <Form.Item name="repeatPassword">
+              <Input.Password
+                prefix={<Icon type="lock" />}
+                size="large"
+                name="repeatPassword"
+                placeholder="Повторите пароль"
+              />
+            </Form.Item>
             <div>
               <SubmitButton size="large" block>
                 Зарегистрироваться
@@ -84,6 +108,16 @@ const SignupForm = ({ newUserRegistration }) => {
       </Block>
     </>
   );
+};
+
+SignupForm.defaultProps = {
+  isRegistered: false,
+};
+
+SignupForm.propTypes = {
+  registrationConnect: PropTypes.func.isRequired,
+  isRegistered: PropTypes.bool,
+  resetFormStateConnect: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupForm);

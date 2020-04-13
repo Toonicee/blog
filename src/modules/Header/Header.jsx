@@ -2,39 +2,62 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import { logout } from '../../redux/actions/auth';
-import { AddPost, Container } from '../../components';
+import { logout } from '../../redux/actions/auth/auth';
+import { getProfile } from '../../redux/actions/profile';
+import { AddPost, Container, LinkAuthPage, UserName, LinkHomePage } from '../../components';
 
 const mapStateToProps = ({ auth }) => ({
-  currentUser: auth.currentUser,
+  username: auth.currentUser.username,
+  isAuthorizedUser: auth.isAuthorizedUser,
 });
 
 const mapDispatchToProps = {
-  onLogout: logout,
+  logoutConnect: logout,
+  getProfileConnect: getProfile,
 };
 
-const Header = ({ onLogout, currentUser: { username }, history }) => {
-  const { pathname } = useLocation();
+const Header = ({ getProfileConnect, isAuthorizedUser, logoutConnect, username }) => {
   return (
     <HeaderWrapper>
       <Container>
         <div>
-          <h2>
-            <Link to="/">{username}</Link>
-          </h2>
-          {pathname === '/add' ? null : <AddPost />}
+          <LinkHomePage />
+          {isAuthorizedUser ? (
+            <>
+              <UserName profileName={getProfileConnect} username={username} />
+              <AddPost />
+            </>
+          ) : null}
         </div>
         <div>
-          <Button onClick={onLogout}>выход</Button>
+          {isAuthorizedUser ? (
+            <Button onClick={logoutConnect}>
+              <i className="fa fa-sign-in" aria-hidden="true" /> выход
+            </Button>
+          ) : (
+            <LinkAuthPage />
+          )}
         </div>
       </Container>
     </HeaderWrapper>
   );
 };
 
-const HeaderWrapper = styled.div`
+Header.defaultProps = {
+  isAuthorizedUser: false,
+  username: '',
+};
+
+Header.propTypes = {
+  logoutConnect: PropTypes.func.isRequired,
+  getProfileConnect: PropTypes.func.isRequired,
+  isAuthorizedUser: PropTypes.bool,
+  username: PropTypes.string,
+};
+
+const HeaderWrapper = styled.header`
   background: #eee;
   padding: 30px 0;
 

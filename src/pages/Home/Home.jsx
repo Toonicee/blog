@@ -1,22 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import styled from 'styled-components';
 import { Header, ArticleAll } from '../../modules';
 
-const mapStateToProps = state => ({
-  isAutoUser: state.auth.isAutoUser,
-  isProgres: state.article.isProgres,
-});
-
-const Home = ({ isAutoUser, isProgres }) => {
-  console.log(isProgres);
-  if (!isAutoUser) return <Redirect to="/login" />;
+const Home = () => {
   return (
     <>
       <Header />
-      {isProgres ? <ArticleAll /> : <div>Загрузка</div>}
+      <Main>
+        <ArticleAll />
+      </Main>
     </>
   );
 };
 
-export default connect(mapStateToProps)(Home);
+const Main = styled.main`
+  margin-top: 30px;
+`;
+
+export default Home;

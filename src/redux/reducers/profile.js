@@ -1,25 +1,24 @@
 const inicialState = {
-  isLoading: true,
+  isLoading: false,
+  profile: {},
 };
 
 const userProfile = (state = inicialState, action) => {
   switch (action.type) {
-    case 'PROFILE_LOADING':
+    case 'FETCH_PROFILE_REQUEST':
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case 'FETCH_PROFILE_SUCCESS':
       return {
         ...state,
         profile: action.payload.profile,
         isLoading: false,
       };
-    case 'PROFILE_NAME':
-      return {
-        ...state,
-        profileName: action.payload,
-      };
     case 'RESET_PROFILE':
       return {
-        ...state,
-        profile: {},
-        isLoading: true,
+        ...inicialState,
       };
     default:
       return state;

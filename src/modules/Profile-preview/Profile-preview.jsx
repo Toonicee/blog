@@ -1,20 +1,24 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
-const mapStateToProps = ({ userProfile }) => {
-  return {
-    profile: userProfile.profile,
-  };
-};
+import { Loading } from '../../components';
 
-const ProfilePreview = ({ profile }) => {
+const ProfilePreview = ({ profile, isLoading }) => {
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div>
-      <img src={profile.image} alt="" />
-      <div>{profile.username}</div>
-      <div>dssdsdsdsds</div>
+      <div>
+        <img alt={profile.username} width="128" height="128" src={profile.image} />
+      </div>
+      <div>
+        <h1>{profile.username}</h1>
+        <div>
+          <span>Редактировать профиль</span>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default connect(mapStateToProps)(ProfilePreview);
+export default ProfilePreview;

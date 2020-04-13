@@ -2,15 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { PostForm, Header } from '../../modules';
 
 const mapStateToProps = ({ auth }) => ({
-  isAutoUser: auth.isAutoUser,
+  isAuthorizedUser: auth.isAuthorizedUser,
 });
 
-const CreatePost = ({ isAutoUser }) => {
-  if (!isAutoUser) return <Redirect to="/login" />;
+const CreatePost = ({ isAuthorizedUser }) => {
+  if (!isAuthorizedUser) return <Redirect to="/login" />;
+
   return (
     <>
       <Header />
@@ -19,6 +21,14 @@ const CreatePost = ({ isAutoUser }) => {
       </Wrapper>
     </>
   );
+};
+
+CreatePost.defaultProps = {
+  isAuthorizedUser: false,
+};
+
+CreatePost.propTypes = {
+  isAuthorizedUser: PropTypes.bool,
 };
 
 const Wrapper = styled.div`

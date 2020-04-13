@@ -1,40 +1,76 @@
+import { handleActions } from 'redux-actions';
+import blogApi from '../../services/services';
+
 const initialState = {
   currentUser: {},
   error: null,
-  isAutoUser: null,
-  isSuccess: false,
+  isAuthorizedUser: false,
+  inProgress: false,
+  isRegistered: false,
 };
 
-const auth = (state = initialState, action) => {
-  switch (action.type) {
-    case 'LOGIN':
-    case 'REGISTER':
+const auth = handleActions(
+  {
+    FETCH_USER_REQUEST: state => {
       return {
         ...state,
-        currentUser: action.payload.user,
-        isAutoUser: true,
+        inProgress: true,
       };
-    case 'LOGOUT':
+    },
+    FETCH_USER_SUCCESS: (state, { payload }) => {
       return {
         ...state,
-        currentUser: {},
-        isAutoUser: false,
+        currentUser: payload.user,
+        inProgress: false,
+        isAuthorizedUser: true,
       };
-    case 'SET_USER_DATA_SUCCESS':
+    },
+    FETCH_USER_FAILURE: state => {
       return {
         ...state,
-        isAutoUser: true,
-        currentUser: action.payload.user,
+        inProgress: false,
       };
-    case 'SET_USER_DATA_FAILURE':
+    },
+    FETCH_REGISTER_SUCCESS: (state, { payload }) => {
       return {
         ...state,
-        isAutoUser: false,
-        error: action.payload,
+        currentUser: payload,
+        isRegistered: true,
       };
-    default:
-      return state;
-  }
-};
+    },
+    FETCH_AUTH_REQUEST: state => {
+      return {
+        ...state,
+        inProgress: true,
+      };
+    },
+    FETCH_AUTH_SUCCESS: (state, { payload }) => {
+      return {
+        ...state,
+        currentUser: payload.user,
+        inProgress: false,
+        isAuthorizedUser: true,
+      };
+    },
+    FETCH_AUTH_FAILURE: state => {
+      return {
+        ...state,
+        inProgress: false,
+      };
+    },
+    LOGOUT: () => {
+      localStorage.setItem('jwt', '');
+      blogApi.setToken(null);
+      return { ...initialState };
+    },
+    RESET_FORM: state => {
+      return {
+        ...state,
+        isRegistered: false,
+      };
+    },
+  },
+  initialState
+);
 
 export default auth;

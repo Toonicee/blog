@@ -2,35 +2,45 @@ import React from 'react';
 import styled from 'styled-components';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { LoginForm, SignupForm } from '../../modules';
 
 const mapStateToProps = ({ auth }) => ({
-  isAutoUser: auth.isAutoUser,
+  isAuthorizedUser: auth.isAuthorizedUser,
 });
 
-const Auth = ({ isAutoUser }) => {
-  if (isAutoUser) return <Redirect to="/home" />;
+const Auth = ({ isAuthorizedUser }) => {
+  if (isAuthorizedUser) return <Redirect to="/" />;
   return (
     <WrapperForm>
-      <>
+      <div>
         <Route exact path="/login" component={LoginForm} />
         <Route exact path="/signup" component={SignupForm} />
-      </>
+      </div>
     </WrapperForm>
   );
 };
 
+Auth.defaultProps = {
+  isAuthorizedUser: false,
+};
+
+Auth.propTypes = {
+  isAuthorizedUser: PropTypes.bool,
+};
+
 const WrapperForm = styled.div`
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   color: #202002;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 
-  .block {
-    width: 100%;
-    max-width: 28%;
+  > div {
+    width: 400px;
+    max-width: 75%;
   }
 
   .auth__title {
