@@ -26,7 +26,10 @@ class AddComment extends React.Component {
 
   render() {
     const { value } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, isAuthorizedUser } = this.props;
+    if (!isAuthorizedUser) {
+      return null;
+    }
     return (
       <Wrapper>
         <ProfileName username={currentUser.username}>
@@ -49,12 +52,14 @@ class AddComment extends React.Component {
 
 AddComment.defaultProps = {
   slug: '',
+  isAuthorizedUser: false,
 };
 
 AddComment.propTypes = {
   addNewComment: PropTypes.func.isRequired,
   slug: PropTypes.string,
   currentUser: PropTypes.instanceOf(Object).isRequired,
+  isAuthorizedUser: PropTypes.bool,
 };
 
 const Wrapper = styled.div`

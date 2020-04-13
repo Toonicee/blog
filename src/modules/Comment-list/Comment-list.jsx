@@ -11,6 +11,7 @@ const mapStateToProps = ({ article, auth, comments }) => ({
   isProgress: article.isProgress,
   currentUser: auth.currentUser,
   comments: comments.commentList,
+  isAuthorizedUser: auth.isAuthorizedUser,
 });
 
 const mapDispatchToProps = {
@@ -25,6 +26,7 @@ const CommentList = ({
   slug,
   deleteCommentConnect,
   isProgress,
+  isAuthorizedUser,
 }) => {
   if (isProgress) {
     return null;
@@ -47,7 +49,12 @@ const CommentList = ({
   );
   return (
     <WrapperComments>
-      <AddComment addNewComment={addNewCommentConnect} slug={slug} currentUser={currentUser} />
+      <AddComment
+        isAuthorizedUser={isAuthorizedUser}
+        addNewComment={addNewCommentConnect}
+        slug={slug}
+        currentUser={currentUser}
+      />
       <div>{comments.length === 0 ? null : renderList}</div>
     </WrapperComments>
   );
@@ -56,6 +63,7 @@ const CommentList = ({
 CommentList.defaultProps = {
   slug: '',
   isProgress: false,
+  isAuthorizedUser: false,
 };
 
 CommentList.propTypes = {
@@ -65,6 +73,7 @@ CommentList.propTypes = {
   deleteCommentConnect: PropTypes.func.isRequired,
   slug: PropTypes.string,
   isProgress: PropTypes.bool,
+  isAuthorizedUser: PropTypes.bool,
 };
 
 const List = styled.ul`
