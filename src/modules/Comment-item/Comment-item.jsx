@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 
-import { DateCreation, ProfileName } from '../../components';
+import { DateCreation, ProfileLink } from '../../components';
 
 const CommentItem = ({ comment, commentId, slug, deleteComment, username }) => {
   const canModify = username === comment.author.username;
@@ -11,7 +11,7 @@ const CommentItem = ({ comment, commentId, slug, deleteComment, username }) => {
     <Comment>
       <CommentHeader>
         <div className="comment__inner">
-          <ProfileName username={comment.author.username}>
+          <ProfileLink username={comment.author.username}>
             <img
               className="comment__author-img"
               src={comment.author.image}
@@ -19,10 +19,10 @@ const CommentItem = ({ comment, commentId, slug, deleteComment, username }) => {
               width="30"
               height="30"
             />
-          </ProfileName>
-          <ProfileName username={comment.author.username}>
+          </ProfileLink>
+          <ProfileLink username={comment.author.username}>
             <span className="comment__author-img">{comment.author.username}</span>
-          </ProfileName>
+          </ProfileLink>
           <div className="comment__date">
             <DateCreation date={comment.createdAt} />
           </div>

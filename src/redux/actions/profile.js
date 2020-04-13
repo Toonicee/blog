@@ -1,8 +1,4 @@
-import { createAction } from 'redux-actions';
-import blogApi from '../../services/services';
-
-// registration actions
-export const fetchRegisterRequest = createAction('FETCH_REGISTER_REQUEST');
+import { getCurrentProfile } from '../../services/services';
 
 const fetchProfileRequest = () => ({
   type: 'FETCH_PROFILE_REQUEST',
@@ -20,7 +16,7 @@ const resetProfile = () => ({
 const getProfile = name => dispatch => {
   localStorage.setItem('ProfileName', name);
   dispatch(fetchProfileRequest());
-  blogApi.Profile.get(name).then(res => {
+  getCurrentProfile(name).then(res => {
     const profile = res.data;
     dispatch(fetchProfileSuccess(profile));
   });

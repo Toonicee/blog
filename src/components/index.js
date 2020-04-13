@@ -1,6 +1,6 @@
-import Block from './Block';
-import AddPost from './Add-post';
-import App from './App';
+import Block from './Block/Block';
+import AddPost from './Add-post/Add-post';
+import App from './App/App';
 import Button from './Button/Button';
 import Container from './Container/Container';
 import ListPagination from './List-pagination/List-pagination';
@@ -13,7 +13,7 @@ import ResultRegistration from './result-registration/result-registration';
 import Management from './Management/Management';
 import DateCreation from './Date-creation/Date-creation';
 import TagList from './Tag-list/Tag-list';
-import ProfileName from './Profile-name/Profile-name';
+import ProfileLink from './Profile-link/Profile-link';
 
 export {
   Button,
@@ -31,5 +31,5 @@ export {
   Management,
   DateCreation,
   TagList,
-  ProfileName,
+  ProfileLink,
 };

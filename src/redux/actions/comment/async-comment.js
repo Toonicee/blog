@@ -1,9 +1,9 @@
-import blogApi from '../../../services/services';
+import { getAll, postComment, delComment } from '../../../services/services';
 import * as actions from './comment';
 
 export const getAllComments = slug => dispatch => {
   dispatch(actions.fetchCommentsRequest());
-  blogApi.Comment.get(slug)
+  getAll(slug)
     .then(res => {
       const articleData = res.data;
       dispatch(actions.fetchCommentsSuccess(articleData));
@@ -15,14 +15,14 @@ export const getAllComments = slug => dispatch => {
 
 export const deleteComment = (slug, id) => dispatch => {
   dispatch(actions.fetchCommentDeleteRequest());
-  blogApi.Comment.delete(slug, id).then(() => {
+  delComment(slug, id).then(() => {
     dispatch(actions.fetchCommentDeleteSuccess(id));
   });
 };
 
 export const addNewComment = (slug, value) => dispatch => {
   dispatch(actions.fetchAddCommentsRequest());
-  blogApi.Comment.post(slug, {
+  postComment(slug, {
     comment: {
       body: value,
     },

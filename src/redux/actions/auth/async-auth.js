@@ -1,9 +1,9 @@
-import blogApi from '../../../services/services';
+import { getCurrentUser, register, login, setToken } from '../../../services/services';
 import * as actions from './auth';
 
 const registration = (values, cbError = () => {}, cbSubmitting = () => {}) => dispatch => {
   dispatch(actions.fetchRegisterRequest());
-  blogApi.Auth.register({
+  register({
     user: {
       username: values.username,
       email: values.email,
@@ -25,7 +25,7 @@ const registration = (values, cbError = () => {}, cbSubmitting = () => {}) => di
 
 const loginUser = values => dispatch => {
   dispatch(actions.fetchAuthRequest());
-  blogApi.Auth.login({
+  login({
     user: {
       email: values.email,
       password: values.password,
@@ -34,7 +34,7 @@ const loginUser = values => dispatch => {
     .then(res => {
       const userData = res.data.user;
       localStorage.setItem('jwt', userData.token);
-      blogApi.getToken(userData.token);
+      setToken(userData.token);
       dispatch(actions.fetchAuthSuccess({ user: userData }));
     })
     .catch(() => {
@@ -45,10 +45,10 @@ const loginUser = values => dispatch => {
 const setUserData = () => dispatch => {
   const token = localStorage.getItem('jwt');
   if (token) {
-    blogApi.setToken(token);
+    setToken(token);
   }
   dispatch(actions.fetchUserRequest());
-  blogApi.Auth.current()
+  getCurrentUser()
     .then(res => {
       const user = res.data;
       dispatch(actions.fetchUserSuccess(user));

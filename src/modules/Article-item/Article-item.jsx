@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { FavoritesCount, DateCreation, TagList, ProfileName } from '../../components';
+import { FavoritesCount, DateCreation, TagList, ProfileLink } from '../../components';
 
 const ArticleItem = ({ article }) => {
   const setArticleSlug = () => {
@@ -15,7 +15,7 @@ const ArticleItem = ({ article }) => {
       <ArticleHeader>
         <div className="article__author">
           <span className="article__desc">Автор:</span>
-          <ProfileName username={article.author.username}>{article.author.username}</ProfileName>
+          <ProfileLink username={article.author.username}>{article.author.username}</ProfileLink>
         </div>
         <DateCreation date={article.createdAt} />
       </ArticleHeader>

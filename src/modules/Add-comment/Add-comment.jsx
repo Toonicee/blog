@@ -2,7 +2,7 @@ import React from 'react';
 import { Input, Button } from 'antd';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { ProfileName } from '../../components';
+import { ProfileLink } from '../../components';
 
 class AddComment extends React.Component {
   constructor() {
@@ -32,7 +32,7 @@ class AddComment extends React.Component {
     }
     return (
       <Wrapper>
-        <ProfileName username={currentUser.username}>
+        <ProfileLink username={currentUser.username}>
           <img
             className="comment__author-img"
             src={currentUser.image}
@@ -40,7 +40,7 @@ class AddComment extends React.Component {
             width="30"
             height="30"
           />
-        </ProfileName>
+        </ProfileLink>
         <form onSubmit={this.addComment} className="comment__form">
           <Input.TextArea rows={1} onChange={this.onChangeValue} value={value} />
           <Button htmlType="submit">отправить</Button>

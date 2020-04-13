@@ -30,12 +30,12 @@ const mapStateToProps = ({ auth }) => ({
 });
 
 const mapDispatchToProps = {
-  loginUser,
+  loginUserConnect: loginUser,
 };
 
-const LoginForm = ({ loginUser, email }) => {
+const LoginForm = ({ loginUserConnect, email }) => {
   const onSubmit = (values, { setSubmitting, setErrors }) => {
-    loginUser(values, setSubmitting, setErrors);
+    loginUserConnect(values, setSubmitting, setErrors);
   };
   return (
     <>
@@ -85,8 +85,13 @@ const LoginForm = ({ loginUser, email }) => {
   );
 };
 
+LoginForm.defaultProps = {
+  email: '',
+};
+
 LoginForm.propTypes = {
-  loginUser: PropTypes.func.isRequired,
+  loginUserConnect: PropTypes.func.isRequired,
+  email: PropTypes.string,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

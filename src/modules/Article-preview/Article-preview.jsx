@@ -9,7 +9,7 @@ import {
   Management,
   DateCreation,
   TagList,
-  ProfileName,
+  ProfileLink,
 } from '../../components';
 
 const ArticlePreview = ({ article, isProgress, username }) => {
@@ -22,7 +22,7 @@ const ArticlePreview = ({ article, isProgress, username }) => {
       <ArticleHeader>
         <div className="article__profile-info">
           <div className="article__inner">
-            <ProfileName username={article.author.username}>
+            <ProfileLink username={article.author.username}>
               <img
                 className="article__profile-img"
                 src={article.author.image}
@@ -30,11 +30,11 @@ const ArticlePreview = ({ article, isProgress, username }) => {
                 width="40"
                 height="40"
               />
-            </ProfileName>
+            </ProfileLink>
             <div>
-              <ProfileName username={article.author.username}>
+              <ProfileLink username={article.author.username}>
                 {article.author.username}
-              </ProfileName>
+              </ProfileLink>
               <div>
                 <DateCreation date={article.createdAt} />
               </div>

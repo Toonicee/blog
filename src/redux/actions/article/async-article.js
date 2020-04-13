@@ -1,10 +1,17 @@
-import blogApi from '../../../services/services';
+import {
+  getArticles,
+  deleteItem,
+  setFavorite,
+  setUnfavorite,
+  create,
+  getCurrentArticle,
+  edit,
+} from '../../../services/services';
 import * as actions from './article';
 
 const getAllArticles = page => dispatch => {
   dispatch(actions.fetchArticlesRequest());
-  blogApi
-    .getArticles(page)
+  getArticles(page)
     .then(res => {
       const articleData = res.data;
       dispatch(actions.fetchArticlesSuccess(articleData));
@@ -17,8 +24,7 @@ const getAllArticles = page => dispatch => {
 const getArticle = slug => dispatch => {
   localStorage.setItem('articleSlug', slug);
   dispatch(actions.fetchArticleRequest());
-  blogApi
-    .currentArticle('get', slug)
+  getCurrentArticle(slug)
     .then(res => {
       const articleData = res.data;
       dispatch(actions.fetchArticleSuccess(articleData));
@@ -29,14 +35,14 @@ const getArticle = slug => dispatch => {
 };
 
 const favorite = slug => dispatch => {
-  blogApi.Article.favorite(slug).then(res => {
+  setFavorite(slug).then(res => {
     const articleData = res.data;
     dispatch(actions.articleFavorited(articleData));
   });
 };
 
 const unfavorite = slug => dispatch => {
-  blogApi.Article.unfavorite(slug).then(res => {
+  setUnfavorite(slug).then(res => {
     const articleData = res.data;
     dispatch(actions.articleUnfavorited(articleData));
   });
@@ -44,7 +50,7 @@ const unfavorite = slug => dispatch => {
 
 const articleCreate = (article, setErrors, setSubmitting) => dispatch => {
   dispatch(actions.fetchCreateArticleRequest());
-  blogApi.Article.create(article)
+  create(article)
     .then(res => {
       const articleData = res.data;
       setSubmitting();
@@ -64,8 +70,7 @@ const editArticle = (slug, values) => dispatch => {
     (acc, [field, value]) => (value === '' ? acc : { ...acc, [field]: value }),
     {}
   );
-  blogApi
-    .currentArticle('put', slug, filteredValues)
+  edit('put', slug, filteredValues)
     .then(res => {
       const articleData = res.data;
       dispatch(actions.fetchUpdateSuccess(articleData));
@@ -78,7 +83,7 @@ const editArticle = (slug, values) => dispatch => {
 };
 
 const delArticle = slug => dispatch => {
-  blogApi.currentArticle('delete', slug).then(() => {
+  deleteItem('delete', slug).then(() => {
     dispatch(actions.deleteArticle());
   });
 };

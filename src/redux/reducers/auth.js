@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import blogApi from '../../services/services';
+import { setToken } from '../../services/services';
 
 const initialState = {
   currentUser: {},
@@ -60,7 +60,7 @@ const auth = handleActions(
     },
     LOGOUT: () => {
       localStorage.setItem('jwt', '');
-      blogApi.setToken(null);
+      setToken(null);
       return { ...initialState };
     },
     RESET_FORM: state => {

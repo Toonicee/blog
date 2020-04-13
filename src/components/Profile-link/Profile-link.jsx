@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const ProfileName = ({ username, children }) => {
+const ProfileLink = ({ username, children }) => {
   const setUserName = () => {
     localStorage.setItem('ProfileName', username);
   };
@@ -13,14 +13,14 @@ const ProfileName = ({ username, children }) => {
   );
 };
 
-ProfileName.defaultProps = {
+ProfileLink.defaultProps = {
   username: '',
   children: null,
 };
 
-ProfileName.propTypes = {
+ProfileLink.propTypes = {
   username: PropTypes.string,
   children: PropTypes.node,
 };
 
-export default ProfileName;
+export default ProfileLink;
