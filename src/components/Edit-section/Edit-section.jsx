@@ -1,37 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Icon } from 'antd';
 import PropTypes from 'prop-types';
 
-import { delArticle } from '../../redux/actions';
+import { articleDelete } from '../../redux/actions';
+
+const mapStateToProps = ({ article }) => ({
+  slug: article.articleCurrent.slug,
+});
 
 const mapDispatchToProps = {
-  delArticleConnect: delArticle,
+  articleDeleteConnect: articleDelete,
 };
 
-const Management = ({ slug, delArticleConnect }) => {
+const EditSection = ({ slug, articleDeleteConnect }) => {
   return (
-    <WrapperManagement>
+    <Wrapper>
       <Link className="management_link btn" to={`/articles/${slug}/edit`}>
         <Icon type="edit" />
         Редактировать
       </Link>
-      <button className="management_btn btn" onClick={() => delArticleConnect(slug)} type="button">
+      <button
+        className="management_btn btn"
+        onClick={() => articleDeleteConnect(slug)}
+        type="button"
+      >
         <Icon type="delete" />
         Удалить
       </button>
-    </WrapperManagement>
+    </Wrapper>
   );
 };
 
-Management.propTypes = {
+EditSection.propTypes = {
   slug: PropTypes.string.isRequired,
-  delArticleConnect: PropTypes.func.isRequired,
+  articleDeleteConnect: PropTypes.func.isRequired,
 };
 
-const WrapperManagement = styled.div`
+const Wrapper = styled.div`
   .management_btn {
     color: #b85c5c;
     border: 1px solid #b85c5c;
@@ -81,4 +89,4 @@ const WrapperManagement = styled.div`
   }
 `;
 
-export default connect(() => ({}), mapDispatchToProps)(Management);
+export default connect(mapStateToProps, mapDispatchToProps)(EditSection);

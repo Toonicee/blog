@@ -4,11 +4,11 @@ import {
   getAllArticles,
   getArticle,
   articleCreate,
-  editArticle,
-  delArticle,
+  articleEdit,
+  articleDelete,
 } from './article/async-article';
 import { resetState } from './article/article';
-import { setUserData, loginUser, registration } from './auth/async-auth';
+import { setUserData, userLogin, registrationUser } from './auth/async-auth';
 import { resetFormState } from './auth/auth';
 import { getAllComments, addNewComment, deleteComment } from './comment/async-comment';
 
@@ -21,11 +21,11 @@ export {
   getArticle,
   articleCreate,
   setUserData,
-  loginUser,
-  registration,
+  userLogin,
+  registrationUser,
   resetFormState,
-  editArticle,
-  delArticle,
+  articleEdit,
+  articleDelete,
   addNewComment,
   getAllComments,
 };

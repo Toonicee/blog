@@ -5,17 +5,9 @@ import PropTypes from 'prop-types';
 
 import { Home, Auth, CreatePost, Profile, Article, EditArticle } from '../../pages';
 import { setUserData } from '../../redux/actions';
-import Loading from '../Loading';
 
 import 'normalize.css';
 import 'antd/dist/antd.css';
-
-const mapStateToProps = ({ auth }) => {
-  return {
-    isAuthorizedUser: auth.isAuthorizedUser,
-    inProgress: auth.inProgress,
-  };
-};
 
 const mapDispatchToProps = {
   setUserDataConnect: setUserData,
@@ -28,11 +20,6 @@ class App extends React.Component {
   }
 
   render() {
-    const { inProgress } = this.props;
-    if (inProgress) {
-      return <Loading />;
-    }
-
     return (
       <>
         <Switch>
@@ -40,7 +27,7 @@ class App extends React.Component {
           <Route path={['/login', '/signup']} component={Auth} />
           <Route path="/add" component={CreatePost} />
           <Route exact path="/:username" component={Profile} />
-          <Route exact path="/articles/:slug" render={() => <Article />} />
+          <Route exact path="/articles/:slug" component={Article} />
           <Route path="/articles/:slug/edit" component={EditArticle} />
         </Switch>
       </>
@@ -50,7 +37,6 @@ class App extends React.Component {
 
 App.propTypes = {
   setUserDataConnect: PropTypes.func.isRequired,
-  inProgress: PropTypes.bool.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(() => ({}), mapDispatchToProps)(App);

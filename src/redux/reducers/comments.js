@@ -2,7 +2,8 @@ import { handleActions } from 'redux-actions';
 
 const initialState = {
   commentList: [],
-  isProgress: false,
+  error: true,
+  inProgress: false,
 };
 
 const comments = handleActions(
@@ -10,20 +11,27 @@ const comments = handleActions(
     FETCH_COMMENTS_REQUEST: state => {
       return {
         ...state,
-        isProgress: true,
+        inProgress: true,
       };
     },
     FETCH_COMMENTS_SUCCESS: (state, { payload }) => {
       return {
         ...state,
-        isProgress: false,
+        inProgress: false,
         commentList: payload.comments,
+      };
+    },
+    FETCH_ADD_COMMENTS_REQUEST: state => {
+      return {
+        ...state,
+        inProgress: true,
       };
     },
     FETCH_ADD_COMMENTS_SUCCESS: (state, { payload }) => {
       return {
         ...state,
         commentList: [payload, ...state.commentList],
+        inProgress: false,
       };
     },
     FETCH_COMMENTS_DELETE_SUCCESS: (state, { payload }) => {

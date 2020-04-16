@@ -6,11 +6,19 @@ import PropTypes from 'prop-types';
 
 import { logout } from '../../redux/actions/auth/auth';
 import { getProfile } from '../../redux/actions/profile';
-import { AddPost, Container, LinkAuthPage, UserName, LinkHomePage } from '../../components';
+import {
+  AddPost,
+  Container,
+  LinkAuthPage,
+  UserName,
+  LinkHomePage,
+  Loading,
+} from '../../components';
 
 const mapStateToProps = ({ auth }) => ({
   username: auth.currentUser.username,
   isAuthorizedUser: auth.isAuthorizedUser,
+  inProgress: auth.inProgress,
 });
 
 const mapDispatchToProps = {
@@ -18,7 +26,10 @@ const mapDispatchToProps = {
   getProfileConnect: getProfile,
 };
 
-const Header = ({ getProfileConnect, isAuthorizedUser, logoutConnect, username }) => {
+const Header = ({ getProfileConnect, isAuthorizedUser, logoutConnect, username, inProgress }) => {
+  if (inProgress) {
+    return <Loading />;
+  }
   return (
     <HeaderWrapper>
       <Container>
@@ -47,6 +58,7 @@ const Header = ({ getProfileConnect, isAuthorizedUser, logoutConnect, username }
 
 Header.defaultProps = {
   isAuthorizedUser: false,
+  inProgress: false,
   username: '',
 };
 
@@ -54,6 +66,7 @@ Header.propTypes = {
   logoutConnect: PropTypes.func.isRequired,
   getProfileConnect: PropTypes.func.isRequired,
   isAuthorizedUser: PropTypes.bool,
+  inProgress: PropTypes.bool,
   username: PropTypes.string,
 };
 

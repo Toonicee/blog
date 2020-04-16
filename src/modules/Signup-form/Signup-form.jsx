@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, SubmitButton, Input } from 'formik-antd';
 import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,8 @@ import * as Yup from 'yup';
 import { connect } from 'react-redux';
 
 import { Block, ResultRegistration } from '../../components';
-import { resetFormState, registration } from '../../redux/actions';
+import { fetchRegisterFailure } from '../../redux/actions/auth/auth';
+import { registrationUser } from '../../redux/actions';
 
 const validation = Yup.object().shape({
   username: Yup.string().required('Введите ваше имя'),
@@ -23,26 +24,28 @@ const validation = Yup.object().shape({
 });
 
 const mapStateToProps = ({ auth }) => ({
-  isRegistered: auth.isRegistered,
+  username: auth.currentUser.username,
 });
 
 const mapDispatchToProps = {
-  registrationConnect: registration,
-  resetFormStateConnect: resetFormState,
+  registrationUserConnect: registrationUser,
+  fetchRegisterFailureConnect: fetchRegisterFailure,
 };
 
-const SignupForm = ({ registrationConnect, isRegistered, resetFormStateConnect }) => {
-  const onSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
-    registrationConnect(
-      values,
-      err => setErrors(err),
-      () => setSubmitting(false)
-    );
-    if (isRegistered) resetForm();
+const SignupForm = ({ registrationUserConnect, username, fetchRegisterFailureConnect }) => {
+  const [isRegistered, changeState] = useState(false);
+  const onSubmit = (values, { setSubmitting, setErrors }) => {
+    registrationUserConnect(values).catch(error => {
+      const { errors } = error.response.data;
+      fetchRegisterFailureConnect();
+      setErrors(errors);
+      setSubmitting(false);
+    });
+    changeState(true);
   };
 
-  if (isRegistered) {
-    return <ResultRegistration success={isRegistered} resetFormState={resetFormStateConnect} />;
+  if (username && isRegistered) {
+    return <ResultRegistration success resetFormState={changeState} />;
   }
   return (
     <>
@@ -111,13 +114,13 @@ const SignupForm = ({ registrationConnect, isRegistered, resetFormStateConnect }
 };
 
 SignupForm.defaultProps = {
-  isRegistered: false,
+  username: '',
 };
 
 SignupForm.propTypes = {
-  registrationConnect: PropTypes.func.isRequired,
-  isRegistered: PropTypes.bool,
-  resetFormStateConnect: PropTypes.func.isRequired,
+  username: PropTypes.string,
+  registrationUserConnect: PropTypes.func.isRequired,
+  fetchRegisterFailureConnect: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupForm);

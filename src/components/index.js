@@ -10,7 +10,7 @@ import LinkHomePage from './Link-home-page/Link-home-page';
 import Loading from './Loading/loading';
 import FavoritesCount from './Favorites-count/Favorites-count';
 import ResultRegistration from './result-registration/result-registration';
-import Management from './Management/Management';
+import EditSection from './Edit-section/Edit-section';
 import DateCreation from './Date-creation/Date-creation';
 import TagList from './Tag-list/Tag-list';
 import ProfileLink from './Profile-link/Profile-link';
@@ -28,7 +28,7 @@ export {
   Loading,
   FavoritesCount,
   ResultRegistration,
-  Management,
+  EditSection,
   DateCreation,
   TagList,
   ProfileLink,

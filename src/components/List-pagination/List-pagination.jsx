@@ -22,7 +22,10 @@ const ListPagination = ({ getAllArticlesConnect, articlesCount }) => {
 
   return (
     <Nav>
-      <Pagination onChange={value => getAllArticlesConnect(value - 1)} total={articlesCount} />
+      <Pagination
+        onChange={value => getAllArticlesConnect((value - 1) * 10)}
+        total={articlesCount}
+      />
     </Nav>
   );
 };

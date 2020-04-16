@@ -12,7 +12,7 @@ const ResultRegistration = ({ success, resetFormState }) => {
         icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
         title="Вы успешно зарегистрировались!"
         extra={
-          <Link onClick={resetFormState} to="/login" type="primary">
+          <Link onClick={() => resetFormState(false)} to="/login" type="primary">
             Войти
           </Link>
         }

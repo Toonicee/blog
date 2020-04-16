@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {
   Loading,
   FavoritesCount,
-  Management,
+  EditSection,
   DateCreation,
   TagList,
   ProfileLink,
@@ -42,7 +42,7 @@ const ArticlePreview = ({ article, isProgress, username }) => {
           </div>
           <span>{article.author.bio}</span>
         </div>
-        {canModify && <Management slug={article.slug} />}
+        {canModify && <EditSection slug={article.slug} />}
       </ArticleHeader>
       <ArticleBody>
         <h3 className="article__title">{article.title}</h3>

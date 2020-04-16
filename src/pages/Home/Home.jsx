@@ -15,6 +15,7 @@ const Home = () => {
 
 const Main = styled.main`
   margin-top: 30px;
+  padding-bottom: 50px;
 `;
 
 export default Home;

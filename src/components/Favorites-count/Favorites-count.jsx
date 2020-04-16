@@ -1,5 +1,6 @@
 import React from 'react';
-import { LikeTwoTone } from '@ant-design/icons';
+import { HeartTwoTone } from '@ant-design/icons';
+import { Statistic } from 'antd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -20,8 +21,13 @@ const FavoritesCount = ({ count, favoriteConnect, unfavoriteConnect, slug, favor
 
   return (
     <Button favorited={favorited} type="button" onClick={like}>
-      {count}
-      <LikeTwoTone width="2.5em" height="2.5em" twoToneColor={favorited ? '#0cf77e' : '#3e4240'} />
+      <Statistic
+        value={count}
+        valueStyle={{ color: favorited ? '#cc2939' : null, fontSize: '16px' }}
+        prefix={
+          <HeartTwoTone className="icon-favorites" twoToneColor={favorited ? '#cc2939' : null} />
+        }
+      />
     </Button>
   );
 };
@@ -43,7 +49,13 @@ FavoritesCount.propTypes = {
 const Button = styled.button`
   cursor: pointer;
   background: inherit;
+  outline: none;
   border: none;
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export default connect(() => ({}), mapDispatchToProps)(FavoritesCount);

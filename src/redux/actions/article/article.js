@@ -22,8 +22,11 @@ export const fetchUpdateFailure = createAction('FETCH_UPDATE_FAILURE');
 
 // action like dislike
 export const articleFavorited = createAction('ARTICLE_FAVORITED');
+export const articleFavoritedFailure = createAction('ARTICLE_FAVORITED_FAILURE');
 export const articleUnfavorited = createAction('ARTICLE_UNFAVORITED');
+export const articleUnfavoritedFailure = createAction('ARTICLE_UNFAVORITED_FAILURE');
 
 export const deleteArticle = createAction('DELETE_ARTICLE');
+export const deleteArticleFailure = createAction('DELETE_ARTICLE_FAILURE');
 
 export const resetState = createAction('RESET_STATE');

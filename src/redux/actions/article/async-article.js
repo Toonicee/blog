@@ -1,11 +1,11 @@
 import {
   getArticles,
-  deleteItem,
   setFavorite,
   setUnfavorite,
-  create,
   getCurrentArticle,
-  edit,
+  createArticle,
+  editArticle,
+  deleteArticle,
 } from '../../../services/services';
 import * as actions from './article';
 
@@ -35,42 +35,38 @@ const getArticle = slug => dispatch => {
 };
 
 const favorite = slug => dispatch => {
-  setFavorite(slug).then(res => {
-    const articleData = res.data;
-    dispatch(actions.articleFavorited(articleData));
-  });
+  setFavorite(slug)
+    .then(res => {
+      const articleData = res.data;
+      dispatch(actions.articleFavorited(articleData));
+    })
+    .catch(() => {
+      dispatch(actions.articleFavoritedFailure());
+    });
 };
 
 const unfavorite = slug => dispatch => {
-  setUnfavorite(slug).then(res => {
-    const articleData = res.data;
-    dispatch(actions.articleUnfavorited(articleData));
-  });
-};
-
-const articleCreate = (article, setErrors, setSubmitting) => dispatch => {
-  dispatch(actions.fetchCreateArticleRequest());
-  create(article)
+  setUnfavorite(slug)
     .then(res => {
       const articleData = res.data;
-      setSubmitting();
-      dispatch(actions.fetchCreateArticleSuccess(articleData));
-      dispatch(actions.resetState());
+      dispatch(actions.articleUnfavorited(articleData));
     })
-    .catch(error => {
-      const { errors } = error.response.data;
-      dispatch(actions.fetchCreateArticleFailure());
-      setErrors(errors);
-      setSubmitting();
+    .catch(() => {
+      dispatch(actions.articleUnfavoritedFailure());
     });
 };
-const editArticle = (slug, values) => dispatch => {
+
+const articleCreate = article => dispatch => {
+  dispatch(actions.fetchCreateArticleRequest());
+  return createArticle(article).then(res => {
+    const articleData = res.data;
+    dispatch(actions.fetchCreateArticleSuccess(articleData));
+    dispatch(actions.resetState());
+  });
+};
+const articleEdit = (slug, values) => dispatch => {
   dispatch(actions.fetchUpdateRequest());
-  const filteredValues = Object.entries(values).reduce(
-    (acc, [field, value]) => (value === '' ? acc : { ...acc, [field]: value }),
-    {}
-  );
-  edit('put', slug, filteredValues)
+  editArticle(slug, values)
     .then(res => {
       const articleData = res.data;
       dispatch(actions.fetchUpdateSuccess(articleData));
@@ -82,10 +78,23 @@ const editArticle = (slug, values) => dispatch => {
     });
 };
 
-const delArticle = slug => dispatch => {
-  deleteItem('delete', slug).then(() => {
-    dispatch(actions.deleteArticle());
-  });
+const articleDelete = slug => dispatch => {
+  deleteArticle(slug)
+    .then(() => {
+      dispatch(actions.deleteArticle());
+      dispatch(actions.resetState());
+    })
+    .catch(() => {
+      dispatch(actions.deleteArticleFailure());
+    });
 };
 
-export { getAllArticles, favorite, unfavorite, getArticle, articleCreate, editArticle, delArticle };
+export {
+  getAllArticles,
+  favorite,
+  unfavorite,
+  getArticle,
+  articleCreate,
+  articleEdit,
+  articleDelete,
+};

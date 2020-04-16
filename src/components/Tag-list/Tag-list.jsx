@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tag } from 'antd';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -8,7 +9,9 @@ const TagList = ({ tags }) => {
     <div>
       <TagsWrapper>
         {tags.map(tag => (
-          <li key={tag}>{tag}</li>
+          <li key={tag}>
+            <Tag>{tag}</Tag>
+          </li>
         ))}
       </TagsWrapper>
     </div>
@@ -25,19 +28,11 @@ TagList.propTypes = {
 
 const TagsWrapper = styled.ul`
   display: flex;
+  margin: 0;
   list-style: none;
   padding: 0;
   opacity: 0.7;
   font-size: 12px;
-
-  li {
-    margin: 0 0.5em 0 0;
-    color: #5e6973;
-    font-size: 13px;
-    &:hover {
-      color: #548eaa;
-    }
-  }
 `;
 
 export default TagList;

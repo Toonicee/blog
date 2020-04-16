@@ -1,45 +1,33 @@
-import { getCurrentUser, register, login, setToken } from '../../../services/services';
+import { getCurrentUser, registerUser, loginUser, setToken } from '../../../services/services';
 import * as actions from './auth';
 
-const registration = (values, cbError = () => {}, cbSubmitting = () => {}) => dispatch => {
+const registrationUser = values => dispatch => {
   dispatch(actions.fetchRegisterRequest());
-  register({
+  return registerUser({
     user: {
       username: values.username,
       email: values.email,
       password: values.password,
     },
-  })
-    .then(res => {
-      const { user } = res.data;
-      dispatch(actions.fetchRegisterSuccess(user));
-      cbSubmitting();
-    })
-    .catch(error => {
-      dispatch(actions.fetchRegisterFailure());
-      const { errors } = error.response.data;
-      cbError(errors);
-      cbSubmitting();
-    });
+  }).then(res => {
+    const { user } = res.data;
+    dispatch(actions.fetchRegisterSuccess(user));
+  });
 };
 
-const loginUser = values => dispatch => {
+const userLogin = values => dispatch => {
   dispatch(actions.fetchAuthRequest());
-  login({
+  return loginUser({
     user: {
       email: values.email,
       password: values.password,
     },
-  })
-    .then(res => {
-      const userData = res.data.user;
-      localStorage.setItem('jwt', userData.token);
-      setToken(userData.token);
-      dispatch(actions.fetchAuthSuccess({ user: userData }));
-    })
-    .catch(() => {
-      dispatch(actions.fetchAuthFailure());
-    });
+  }).then(res => {
+    const userData = res.data.user;
+    localStorage.setItem('jwt', userData.token);
+    setToken(userData.token);
+    dispatch(actions.fetchAuthSuccess({ user: userData }));
+  });
 };
 
 const setUserData = () => dispatch => {
@@ -58,4 +46,4 @@ const setUserData = () => dispatch => {
     });
 };
 
-export { setUserData, loginUser, registration };
+export { setUserData, userLogin, registrationUser };

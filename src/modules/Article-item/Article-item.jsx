@@ -2,37 +2,61 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Skeleton, Switch, Card, Avatar } from 'antd';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { FavoritesCount, DateCreation, TagList, ProfileLink } from '../../components';
 
-const ArticleItem = ({ article }) => {
+const ArticleItem = ({ article, isProgress }) => {
   const setArticleSlug = () => {
     localStorage.setItem('articleSlug', article.slug);
   };
 
   return (
-    <InnerArticle>
-      <ArticleHeader>
-        <div className="article__author">
-          <span className="article__desc">Автор:</span>
-          <ProfileLink username={article.author.username}>{article.author.username}</ProfileLink>
-        </div>
-        <DateCreation date={article.createdAt} />
-      </ArticleHeader>
-      <ArticleBody>
-        <Link onClick={setArticleSlug} to={`/articles/${article.slug}`}>
-          <div>
-            <h3 className="article__title">{article.title}</h3>
-          </div>
-        </Link>
-        <TagList tags={article.tagList} />
-        <FavoritesCount
-          favorited={article.favorited}
-          count={article.favoritesCount}
-          slug={article.slug}
+    <>
+      <Card style={{ width: 700, marginTop: 16 }} loading={isProgress}>
+        <Card.Meta
+          avatar={
+            <ProfileLink username={article.author.username}>
+              <Avatar src={article.author.image} />
+            </ProfileLink>
+          }
+          title={
+            <Link onClick={setArticleSlug} to={`/articles/${article.slug}`}>
+              <div>
+                <h3 className="article__title">{article.title}</h3>
+              </div>
+            </Link>
+          }
+          description={article.description}
         />
-      </ArticleBody>
-    </InnerArticle>
+        <div>
+          <ArticleHeader>
+            <TagList tags={article.tagList} />
+          </ArticleHeader>
+          <ArticleBody>
+            <Inner>
+              <DateCreation date={article.createdAt} />
+
+              <FavoritesCount
+                favorited={article.favorited}
+                count={article.favoritesCount}
+                slug={article.slug}
+              />
+            </Inner>
+            <div>
+              <Link
+                className="article__link"
+                onClick={setArticleSlug}
+                to={`/articles/${article.slug}`}
+              >
+                Читать далее…
+              </Link>
+            </div>
+          </ArticleBody>
+        </div>
+      </Card>
+    </>
   );
 };
 
@@ -40,14 +64,13 @@ ArticleItem.propTypes = {
   article: PropTypes.instanceOf(Object).isRequired,
 };
 
-const InnerArticle = styled.div`
-  border: 2px solid rgba(0, 0, 0, 0.05);
-  background: #fff;
-  margin-bottom: 20px;
-  padding: 25px 15px;
-`;
-
 const ArticleBody = styled.div`
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  p {
+    margin: 0;
+  }
   .article__title {
     color: #333;
     font-weight: 500;
@@ -61,12 +84,26 @@ const ArticleBody = styled.div`
       color: #5790ac;
     }
   }
+
+  .article__link {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+    &:hover {
+      color: rgba(0, 0, 0, 0.9);
+    }
+  }
+`;
+
+const Inner = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const ArticleHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 20px;
   .article__author {
     color: #548eaa;
     font-weight: 500;

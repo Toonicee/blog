@@ -8,17 +8,13 @@ import * as Yup from 'yup';
 import { connect } from 'react-redux';
 
 import { Block } from '../../components';
-import { loginUser } from '../../redux/actions/auth/async-auth';
+import { userLogin } from '../../redux/actions/auth/async-auth';
+import { fetchAuthFailure } from '../../redux/actions/auth/auth';
 
 const validation = Yup.object().shape({
   password: Yup.string()
     .min(8, 'Must be 8 characters or more')
     .max(40, 'Must be 40 characters or less')
-    .test(
-      'pass',
-      'Latin letters and numbers only, at least one number and one capital letter',
-      value => /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/.test(value)
-    )
     .required('Required'),
   email: Yup.string()
     .email('Введите коректные E-mail')
@@ -30,12 +26,18 @@ const mapStateToProps = ({ auth }) => ({
 });
 
 const mapDispatchToProps = {
-  loginUserConnect: loginUser,
+  userLoginConnect: userLogin,
+  fetchAuthFailureConnect: fetchAuthFailure,
 };
 
-const LoginForm = ({ loginUserConnect, email }) => {
+const LoginForm = ({ userLoginConnect, email, fetchAuthFailureConnect }) => {
   const onSubmit = (values, { setSubmitting, setErrors }) => {
-    loginUserConnect(values, setSubmitting, setErrors);
+    userLoginConnect(values).catch(error => {
+      const { errors } = error.response.data;
+      fetchAuthFailureConnect();
+      setSubmitting(false);
+      setErrors(errors);
+    });
   };
   return (
     <>
@@ -90,7 +92,8 @@ LoginForm.defaultProps = {
 };
 
 LoginForm.propTypes = {
-  loginUserConnect: PropTypes.func.isRequired,
+  fetchAuthFailureConnect: PropTypes.func.isRequired,
+  userLoginConnect: PropTypes.func.isRequired,
   email: PropTypes.string,
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Form, Comment, Avatar } from 'antd';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ProfileLink } from '../../components';
@@ -26,26 +26,37 @@ class AddComment extends React.Component {
 
   render() {
     const { value } = this.state;
-    const { currentUser, isAuthorizedUser } = this.props;
+    const { currentUser, isAuthorizedUser, inProgress } = this.props;
     if (!isAuthorizedUser) {
       return null;
     }
     return (
-      <Wrapper>
-        <ProfileLink username={currentUser.username}>
-          <img
-            className="comment__author-img"
-            src={currentUser.image}
-            alt={currentUser.username}
-            width="30"
-            height="30"
-          />
-        </ProfileLink>
-        <form onSubmit={this.addComment} className="comment__form">
-          <Input.TextArea rows={1} onChange={this.onChangeValue} value={value} />
-          <Button htmlType="submit">отправить</Button>
-        </form>
-      </Wrapper>
+      <div>
+        <Comment
+          avatar={
+            <ProfileLink username={currentUser.username}>
+              <Avatar src={currentUser.image} alt="Han Solo" />
+            </ProfileLink>
+          }
+          content={
+            <div>
+              <Form.Item>
+                <Input.TextArea rows={4} onChange={this.onChangeValue} value={value} />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  loading={inProgress}
+                  onClick={this.addComment}
+                >
+                  Добавить комментарий
+                </Button>
+              </Form.Item>
+            </div>
+          }
+        />
+      </div>
     );
   }
 }

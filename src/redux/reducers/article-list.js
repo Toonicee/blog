@@ -2,10 +2,11 @@ import { handleActions } from 'redux-actions';
 
 const initialState = {
   articles: [],
+  error: false,
   isProgress: false,
 };
 
-const like = (articles, payload) =>
+const setValueArticle = (articles, payload) =>
   articles.map(article => {
     if (article.slug === payload.article.slug) {
       return {
@@ -30,6 +31,7 @@ const articles = handleActions(
         ...state,
         articles: payload.articles,
         articlesCount: payload.articlesCount,
+        currentPage: payload.page,
         isProgress: false,
       };
     },
@@ -37,19 +39,19 @@ const articles = handleActions(
       return {
         ...state,
         isProgress: false,
+        error: true,
       };
     },
     ARTICLE_FAVORITED: (state, { payload }) => {
-      console.log(state);
       return {
         ...state,
-        articles: like(state.articles, payload),
+        articles: setValueArticle(state.articles, payload),
       };
     },
     ARTICLE_UNFAVORITED: (state, { payload }) => {
       return {
         ...state,
-        articles: like(state.articles, payload),
+        articles: setValueArticle(state.articles, payload),
       };
     },
   },

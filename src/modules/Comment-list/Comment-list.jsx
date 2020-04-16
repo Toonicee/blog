@@ -8,7 +8,7 @@ import { addNewComment, deleteComment } from '../../redux/actions';
 
 const mapStateToProps = ({ article, auth, comments }) => ({
   slug: article.articleCurrent.slug,
-  isProgress: article.isProgress,
+  inProgress: comments.inProgress,
   currentUser: auth.currentUser,
   comments: comments.commentList,
   isAuthorizedUser: auth.isAuthorizedUser,
@@ -25,13 +25,9 @@ const CommentList = ({
   addNewCommentConnect,
   slug,
   deleteCommentConnect,
-  isProgress,
+  inProgress,
   isAuthorizedUser,
 }) => {
-  if (isProgress) {
-    return null;
-  }
-
   const renderList = (
     <List>
       {comments.map(comment => (
@@ -50,12 +46,13 @@ const CommentList = ({
   return (
     <WrapperComments>
       <AddComment
+        inProgress={inProgress}
         isAuthorizedUser={isAuthorizedUser}
         addNewComment={addNewCommentConnect}
         slug={slug}
         currentUser={currentUser}
       />
-      <div>{comments.length === 0 ? null : renderList}</div>
+      {renderList}
     </WrapperComments>
   );
 };

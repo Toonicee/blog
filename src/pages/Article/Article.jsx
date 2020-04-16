@@ -30,11 +30,11 @@ class Article extends React.Component {
   }
 
   render() {
-    const { article, isProgress, username, articleState, resetStateConnect } = this.props;
-    if (articleState === 'deleted') {
-      resetStateConnect();
+    const { article, isProgress, username, articleState } = this.props;
+    if (articleState === 'delete') {
       return <Redirect to="/" />;
     }
+
     return (
       <>
         <Header />
@@ -57,10 +57,9 @@ Article.defaultProps = {
 
 Article.propTypes = {
   getArticleConnect: PropTypes.func.isRequired,
-  resetStateConnect: PropTypes.func.isRequired,
   getAllCommentsConnect: PropTypes.func.isRequired,
-  articleState: PropTypes.string,
   article: PropTypes.instanceOf(Object).isRequired,
+  articleState: PropTypes.string,
   isProgress: PropTypes.bool,
   username: PropTypes.string,
 };

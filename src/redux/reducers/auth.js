@@ -3,10 +3,10 @@ import { setToken } from '../../services/services';
 
 const initialState = {
   currentUser: {},
-  error: null,
+  error: false,
   isAuthorizedUser: false,
   inProgress: false,
-  isRegistered: false,
+  isSuccess: false,
 };
 
 const auth = handleActions(
@@ -29,13 +29,26 @@ const auth = handleActions(
       return {
         ...state,
         inProgress: false,
+        error: true,
+      };
+    },
+    FETCH_REGISTER_REQUEST: state => {
+      return {
+        ...state,
+        inProgress: true,
       };
     },
     FETCH_REGISTER_SUCCESS: (state, { payload }) => {
       return {
         ...state,
         currentUser: payload,
-        isRegistered: true,
+      };
+    },
+    FETCH_REGISTER_FAILURE: state => {
+      return {
+        ...state,
+        inProgress: false,
+        error: true,
       };
     },
     FETCH_AUTH_REQUEST: state => {
@@ -56,6 +69,7 @@ const auth = handleActions(
       return {
         ...state,
         inProgress: false,
+        error: true,
       };
     },
     LOGOUT: () => {

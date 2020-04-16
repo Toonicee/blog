@@ -12,20 +12,20 @@ export const getArticles = (page = 0, limit = 10) =>
   axios.get('/articles', {
     params: {
       limit,
-      offset: page * 10,
+      offset: page,
     },
   });
-export const deleteItem = slug => axios.delete(`/articles/${slug}`);
+export const deleteArticle = slug => axios.delete(`/articles/${slug}`);
 export const getCurrentArticle = slug => axios.get(`/articles/${slug}`);
 export const setFavorite = slug => axios.post(`/articles/${slug}/favorite`);
 export const setUnfavorite = slug => axios.delete(`/articles/${slug}/favorite`);
-export const create = article => axios.post('/articles', { article });
-export const edit = (slug, value) => axios.put(`/articles/${slug}`, { article: value });
+export const createArticle = article => axios.post('/articles', { article });
+export const editArticle = (slug, value) => axios.put(`/articles/${slug}`, { article: value });
 
 // API registration and authorization
 export const getCurrentUser = () => axios.get('/user');
-export const register = body => axios.post('/users', body);
-export const login = body => axios.post('/users/login', body);
+export const registerUser = body => axios.post('/users', body);
+export const loginUser = body => axios.post('/users/login', body);
 
 // API profile
 export const follow = username => axios.post(`/profiles/${username}/follow`);

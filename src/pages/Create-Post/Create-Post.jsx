@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { PostForm, Header } from '../../modules';
+import { FormCreateArticle, Header } from '../../modules';
 
 const mapStateToProps = ({ auth }) => ({
   isAuthorizedUser: auth.isAuthorizedUser,
@@ -17,7 +17,7 @@ const CreatePost = ({ isAuthorizedUser }) => {
     <>
       <Header />
       <Wrapper>
-        <PostForm />
+        <FormCreateArticle />
       </Wrapper>
     </>
   );

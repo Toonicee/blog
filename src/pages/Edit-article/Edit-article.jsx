@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { Header, PostForm } from '../../modules';
+import { Header, FormEditArticle } from '../../modules';
 
 const mapStateToProps = ({ auth }) => ({
   isAuthorizedUser: auth.isAuthorizedUser,
@@ -16,7 +16,7 @@ const EditArticle = ({ isAuthorizedUser }) => {
     <>
       <Header />
       <Wrapper>
-        <PostForm />
+        <FormEditArticle />
       </Wrapper>
     </>
   );
